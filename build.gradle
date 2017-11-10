@@ -23,7 +23,7 @@ apply plugin: 'eclipse'
 //apply plugin: 'io.spring.dependency-management'
 
 group = 'com.hendal.spring'
-version = '0.0.1'
+version = '0.0.1x'
 
 sourceCompatibility = 1.8
 compileKotlin {
