@@ -23,7 +23,7 @@ apply plugin: 'eclipse'
 //apply plugin: 'io.spring.dependency-management'
 
 group = 'com.hendal.spring'
-version = '0.0.1x'
+version = '0.0.2'
 
 sourceCompatibility = 1.8
 compileKotlin {
@@ -40,13 +40,13 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework:spring-jdbc:$springVersion")
-    compile("org.springframework:spring-web:$springVersion")
-    compile("org.springframework:spring-context:$springVersion")
+    compileOnly("org.springframework:spring-jdbc:$springVersion")
+    compileOnly("org.springframework:spring-web:$springVersion")
+    compileOnly("org.springframework:spring-context:$springVersion")
 //    compile('org.springframework.boot:spring-boot-starter-jdbc')
 //    compile('org.springframework.boot:spring-boot-starter-web')
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion")
-    compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion")
+    compileOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 //    testRuntime('org.postgresql:postgresql')
 //    testCompile('org.springframework.boot:spring-boot-starter-test')
 //    testCompile('org.liquibase:liquibase-core')

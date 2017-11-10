@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationEventPublisher
 import java.io.Serializable
 import kotlin.reflect.KProperty1
 
-abstract class JdbcService<T : IEntity<ID>, ID : Serializable>(private val eventPublisher: ApplicationEventPublisher) : ReadOnlyJdbcRepository<T, ID>(), IRepository<T, ID> {
+abstract class JdbcRepository<T : IEntity<ID>, ID : Serializable>(private val eventPublisher: ApplicationEventPublisher) : ReadOnlyJdbcRepository<T, ID>(), IRepository<T, ID> {
 
     abstract fun getters(): Map<String, KProperty1<T, *>>
 
