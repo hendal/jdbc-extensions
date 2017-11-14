@@ -2,7 +2,7 @@ package com.hendal.spring.jdbcextensions.jdbc
 
 import java.io.Serializable
 
-interface IRepository<T : IEntity<ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
+interface IRepository<T : IEntity<T,ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
     fun insert(entity: T): ID
 
     fun delete(entity: T)

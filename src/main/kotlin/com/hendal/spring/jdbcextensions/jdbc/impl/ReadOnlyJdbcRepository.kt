@@ -1,11 +1,13 @@
-package com.hendal.spring.jdbcextensions.jdbc
+package com.hendal.spring.jdbcextensions.jdbc.impl
 
+import com.hendal.spring.jdbcextensions.jdbc.IEntity
+import com.hendal.spring.jdbcextensions.jdbc.IReadOnlyRepository
 import com.hendal.spring.jdbcextensions.jdbc.dto.Page
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.io.Serializable
 
-abstract class ReadOnlyJdbcRepository<T : IEntity<ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
+abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
     abstract fun getJdbcTemplate(): NamedParameterJdbcTemplate
 
     override fun findOne(
@@ -25,40 +27,42 @@ abstract class ReadOnlyJdbcRepository<T : IEntity<ID>, ID : Serializable> : IRea
     }
 
     override fun findAll(
-            simpleWhere: Map<String, *>,
+            simpleWhere: Map<String, Any>,
             cols: Array<String>,
             sortColumns: Array<String>,
             rm: RowMapper<T>
     ): List<T> {
+        val parsedParams = ParamInterpreter.interpretParams(simpleWhere)
         return getJdbcTemplate().query(forgeSelect(
                 cols = cols,
                 page = -1,
-                simpleWhere = simpleWhere,
+                simpleWhere = parsedParams,
                 size = -1,
                 sortColumns = sortColumns
         ), rm)
     }
 
     override fun findAllPaginated(
-            simpleWhere: Map<String, *>,
+            simpleWhere: Map<String, Any>,
             page: Int,
             size: Int,
             sortColumns: Array<String>,
             cols: Array<String>,
             rm: RowMapper<T>
     ): Page<T> {
+        val parsedParams = ParamInterpreter.interpretParams(simpleWhere)
         val total = getJdbcTemplate().queryForObject(forgeSelect(
                 cols = arrayOf("count(1)"),
                 page = -1,
-                simpleWhere = simpleWhere,
+                simpleWhere = parsedParams,
                 size = -1,
                 sortColumns = arrayOf()
-        ), simpleWhere, Long::class.java)!!
+        ), parsedParams, Long::class.java)!!
         val items = if (total != 0L && total > size * page) {
             getJdbcTemplate().query(forgeSelect(
                     cols = cols,
                     page = page,
-                    simpleWhere = simpleWhere,
+                    simpleWhere = parsedParams,
                     size = size,
                     sortColumns = sortColumns
             ), simpleWhere, rm)

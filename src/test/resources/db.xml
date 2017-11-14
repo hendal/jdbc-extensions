@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="entity_table" author="hendal">
+        <createTable tableName="entity">
+            <column name="entity_id" type="bigserial">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="my_date" type="date" />
+            <column name="my_timestamp" type="timestamp" />
+            <column name="my_timestamp_time_zone" type="timestamp with time zone" />
+            <column name="my_text" type="text" />
+            <column name="my_int" type="int" />
+            <column name="my_num" type="numeric(12,5)" />
+            <column name="my_array" type="text[]" />
+            <column name="my_json_array" type="json" />
+            <column name="my_json_obj" type="json" />
+            <column name="my_interval" type="text" />
+            <column name="group" type="text" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,14 +1,14 @@
 package com.hendal.spring.jdbcextensions.web
 
 import com.hendal.spring.jdbcextensions.jdbc.IEntity
-import com.hendal.spring.jdbcextensions.jdbc.ReadOnlyJdbcRepository
+import com.hendal.spring.jdbcextensions.jdbc.impl.ReadOnlyJdbcRepository
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import java.io.Serializable
 
-abstract class ReadOnlyJdbcController<T: IEntity<ID>, ID : Serializable> {
+abstract class ReadOnlyJdbcController<T: IEntity<T,ID>, ID : Serializable> {
 
     abstract fun getService(): ReadOnlyJdbcRepository<T, ID>
 

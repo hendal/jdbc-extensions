@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"></bean>
+
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="username" value="extensions"/>
+        <property name="password" value="123456789"/>
+        <property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:65432/extensions" />
+    </bean>
+    <context:annotation-config/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg ref="dataSource" />
+    </bean>
+
+    <bean id="entityRepository" class="com.hendal.spring.jdbcextensions.jdbc.impl.EntityRepository">
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+
+    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+        <property name="dataSource" ref="dataSource" />
+        <property name="changeLog" value="classpath:db.xml" />
+    </bean>
+</beans>

@@ -1,7 +1,7 @@
 package com.hendal.spring.jdbcextensions.web
 
 import com.hendal.spring.jdbcextensions.jdbc.IEntity
-import com.hendal.spring.jdbcextensions.jdbc.JdbcRepository
+import com.hendal.spring.jdbcextensions.jdbc.impl.JdbcRepository
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import java.io.Serializable
 import java.net.URI
 
-abstract class JdbcController<T : IEntity<ID>, ID : Serializable> : ReadOnlyJdbcController<T, ID>() {
+abstract class JdbcController<T : IEntity<T,ID>, ID : Serializable> : ReadOnlyJdbcController<T, ID>() {
     abstract override fun getService(): JdbcRepository<T, ID>
     abstract fun basePath(): String
 

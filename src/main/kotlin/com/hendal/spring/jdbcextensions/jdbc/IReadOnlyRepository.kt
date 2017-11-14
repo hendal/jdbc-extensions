@@ -17,14 +17,14 @@ interface IReadOnlyRepository<T, in ID : Serializable> {
     ): T
 
     fun findAll(
-            simpleWhere: Map<String, *> = mapOf<String, Any>(),
+            simpleWhere: Map<String, Any> = mapOf<String, Any>(),
             cols: Array<String> = columns(),
             sortColumns: Array<String> = arrayOf(id()),
             rm: RowMapper<T> = rowMapper()
     ): List<T>
 
     fun findAllPaginated(
-            simpleWhere: Map<String, *> = mapOf<String, Any>(),
+            simpleWhere: Map<String, Any> = mapOf<String, Any>(),
             page: Int,
             size: Int,
             sortColumns: Array<String> = arrayOf(id()),
