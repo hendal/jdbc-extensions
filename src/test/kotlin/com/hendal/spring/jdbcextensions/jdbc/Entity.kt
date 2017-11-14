@@ -13,7 +13,7 @@ data class Entity(override val id: Long,
                   val my_int: Int,
                   val my_num: BigDecimal,
                   val my_array: Array<String>,
-                  val my_json_array: String,
+                  val my_json_array: Array<String>,
                   val my_json_obj: Any,
                   val my_interval: java.time.Duration,
                   val group: String

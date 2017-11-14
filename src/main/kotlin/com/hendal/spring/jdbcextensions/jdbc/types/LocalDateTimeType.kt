@@ -12,4 +12,6 @@ class LocalDateTimeType<E>(
 ) : BaseType<E>(columnName) {
     override fun getParameter(entity: E): String =
             accesor.get(entity).format(DateTimeFormatter.ISO_DATE_TIME)
+
+    override fun parameterForm(index: String) = "${super.parameterForm(index)}::timestamp"
 }

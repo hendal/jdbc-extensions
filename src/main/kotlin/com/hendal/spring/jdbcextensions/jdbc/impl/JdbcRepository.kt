@@ -17,11 +17,11 @@ abstract class JdbcRepository<T : IEntity<T, ID>, ID : Serializable> : ReadOnlyJ
         this.eventPublisher = applicationContext
     }
 
-    abstract fun getters(): Map<String, BaseType<IEntity<T, ID>, ID>>
+    abstract fun getters(): Map<String, BaseType<T>>
 
     override fun columns(): Array<String> = getters().keys.toTypedArray()
 
-    fun getter(name: String): BaseType<IEntity<T, ID>, ID> = getters()[name]!!
+    fun getter(name: String): BaseType<T> = getters()[name]!!
     fun save(entity: T) {
         val id = getter(id()).getParameter(entity)
         when (id) {
@@ -50,7 +50,8 @@ abstract class JdbcRepository<T : IEntity<T, ID>, ID : Serializable> : ReadOnlyJ
     override fun batchInsert(entities: Array<T>, columns: Array<String>) {
         if (entities.isNotEmpty()) {
             val params = entities.map { entityToParams(it, columns) }.toTypedArray()
-            getJdbcTemplate().batchUpdate(forgeInsert(entities[0]), params)
+            val insert = forgeInsert(entities[0])
+            getJdbcTemplate().batchUpdate(insert, params)
         }
     }
 

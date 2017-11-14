@@ -23,7 +23,7 @@ class JdbcRepositoryTest {
     fun setup() {
         if (!set) {
             println("sleeping")
-            Thread.sleep(5000)
+            Thread.sleep(10000)
             context = AppConfig.getContext()
             repo = context.getBean(EntityRepository::class.java)
             set = true
@@ -36,7 +36,7 @@ class JdbcRepositoryTest {
                         my_timestamp_time_zone = ZonedDateTime.now(),my_text = "my awesome,text",
                         my_int = 25,my_num = BigDecimal("3526.23"),my_array = arrayOf("p1","p2"),
                         group = "reserved word", my_interval = Duration.ofHours(3),
-                        my_json_array = "[]" ,
+                        my_json_array = arrayOf("my","not","empty","array") ,
                         my_json_obj = mapOf("esta" to "you","esa" to 25, "aquella" to null)
                 )
         ))
