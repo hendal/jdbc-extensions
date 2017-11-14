@@ -6,10 +6,10 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.reflect.KProperty1
 
-class ZonedDateTimeType<E, ID : Serializable>(
+class ZonedDateTimeType<E>(
         columnName: String,
-        val accesor: KProperty1<IEntity<E, ID>, ZonedDateTime>
-) : BaseType<E, ID>(columnName) {
-    override fun getParameter(entity: IEntity<E, ID>): String =
+        val accesor: KProperty1<E, ZonedDateTime>
+) : BaseType<E>(columnName) {
+    override fun getParameter(entity: E): String =
             accesor.get(entity).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
 }

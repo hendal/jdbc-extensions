@@ -2,15 +2,9 @@ package com.hendal.spring.jdbcextensions.jdbc.impl
 
 import com.hendal.spring.jdbcextensions.jdbc.*
 import com.hendal.spring.jdbcextensions.jdbc.types.LongType
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import kotlin.reflect.KProperty1
 
 @Repository
 class EntityRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : JdbcRepository<Entity, Long>() {

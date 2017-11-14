@@ -6,10 +6,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.reflect.KProperty1
 
-class LocalDatetype<E, ID : Serializable>(
+class LocalDatetype<E>(
         columnName: String,
-        val accesor: KProperty1<IEntity<E, ID>, LocalDate>
-) : BaseType<E, ID>(columnName) {
-    override fun getParameter(entity: IEntity<E, ID>): String =
+        val accesor: KProperty1<E, LocalDate>
+) : BaseType<E>(columnName) {
+    override fun getParameter(entity: E): String =
             accesor.get(entity).format(DateTimeFormatter.ISO_DATE)
 }

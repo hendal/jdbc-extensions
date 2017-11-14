@@ -5,10 +5,10 @@ import java.io.Serializable
 import java.time.Duration
 import kotlin.reflect.KProperty1
 
-class DurationType<E, ID : Serializable>(
+class DurationType<E>(
         columnName: String,
-        val accesor: KProperty1<IEntity<E, ID>, Duration>
-) : BaseType<E, ID>(columnName) {
-    override fun getParameter(entity: IEntity<E, ID>): String =
+        val accesor: KProperty1<E, Duration>
+) : BaseType<E>(columnName) {
+    override fun getParameter(entity: E): String =
             accesor.get(entity).toString()
 }

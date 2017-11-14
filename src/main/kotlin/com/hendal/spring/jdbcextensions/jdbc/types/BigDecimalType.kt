@@ -5,9 +5,9 @@ import java.io.Serializable
 import java.math.BigDecimal
 import kotlin.reflect.KProperty1
 
-class BigDecimalType <E, ID : Serializable>(
+class BigDecimalType <E>(
         columnName: String,
-        val accesor: KProperty1<IEntity<E, ID>, BigDecimal>
-) : BaseType<E,ID>(columnName) {
-    override fun getParameter(entity: IEntity<E, ID>) = accesor.get(entity)
+        val accesor: KProperty1<E, BigDecimal>
+) : BaseType<E>(columnName) {
+    override fun getParameter(entity: E) = accesor.get(entity)
 }
