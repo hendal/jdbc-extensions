@@ -51,7 +51,7 @@ object ParamInterpreter {
         }
         val forType = arr[0]
         val newArr = when (forType) {
-            is String -> (arr as Array<String>).map { quote(it) }
+            is String -> (arr as Array<String>).map { "\"$it\"" }
             is Number -> listOf(arr as Array<Number>)
             is LocalDate -> (arr as Array<LocalDate>).map { it.format(dateFormatter) }.map(::quote)
             is LocalDateTime -> (arr as Array<LocalDateTime>).map { it.format(dateTimeFormatter) }.map(::quote)

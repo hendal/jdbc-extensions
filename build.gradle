@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.1.51'
+        kotlinVersion = '1.1.60'
         springBootVersion = '2.0.0.M6'
         springVersion = '5.0.1.RELEASE'
     }
@@ -63,4 +63,4 @@ task stopTestDb(type: Exec) {
     workingDir "./src/main/docker"
     commandLine "docker-compose", "-f", "docker-compose-test.yml", "down"
 }
-test.finalizedBy stopTestDb
+//test.finalizedBy stopTestDb

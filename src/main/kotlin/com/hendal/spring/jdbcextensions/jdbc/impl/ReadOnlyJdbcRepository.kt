@@ -3,13 +3,15 @@ package com.hendal.spring.jdbcextensions.jdbc.impl
 import com.hendal.spring.jdbcextensions.jdbc.IEntity
 import com.hendal.spring.jdbcextensions.jdbc.IReadOnlyRepository
 import com.hendal.spring.jdbcextensions.jdbc.dto.Page
+import com.hendal.spring.jdbcextensions.jdbc.types.BaseType
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.io.Serializable
 
 abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
     abstract fun getJdbcTemplate(): NamedParameterJdbcTemplate
-
+    abstract fun getters(): Map<String, BaseType<T>>
+    fun getter(name: String): BaseType<T> = getters()[name]!!
     override fun findOne(
             id: ID,
             cols: Array<String>,
@@ -80,8 +82,10 @@ abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IR
     }
 
     private fun forgeSelect(cols: Array<String>, simpleWhere: Map<String, *>, page: Int, size: Int, sortColumns: Array<String>): String {
-        val columns = java.lang.String.join(",", *cols)!!
-        val sortC = java.lang.String.join(",", *sortColumns)!!
+        val selectColumns = cols.map(this::getter).map { it.columnName() } .toTypedArray()
+        val columns = java.lang.String.join(",", *selectColumns)!!
+        val sColumns = sortColumns.map(this::getter).map { it.columnName() } .toTypedArray()
+        val sortC = java.lang.String.join(",", *sColumns)!!
         val sort = if (sortC.isEmpty()) "" else "ORDER BY $sortC"
         val where = simpleWhereInterpret(simpleWhere)
         val paging = (if (size != -1) " LIMIT $size " else "") + (if (page != -1) "OFFSET ${page * size}" else "")

@@ -17,11 +17,8 @@ abstract class JdbcRepository<T : IEntity<T, ID>, ID : Serializable> : ReadOnlyJ
         this.eventPublisher = applicationContext
     }
 
-    abstract fun getters(): Map<String, BaseType<T>>
-
     override fun columns(): Array<String> = getters().keys.toTypedArray()
 
-    fun getter(name: String): BaseType<T> = getters()[name]!!
     fun save(entity: T) {
         val id = getter(id()).getParameter(entity)
         when (id) {

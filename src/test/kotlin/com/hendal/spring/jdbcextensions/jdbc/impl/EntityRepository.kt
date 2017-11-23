@@ -1,11 +1,13 @@
 package com.hendal.spring.jdbcextensions.jdbc.impl
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hendal.spring.jdbcextensions.jdbc.*
 import com.hendal.spring.jdbcextensions.jdbc.types.*
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
+import java.time.Duration
 
 @Repository
 class EntityRepository(
@@ -37,8 +39,8 @@ class EntityRepository(
                 my_int = rs.getInt("my_int"),
                 my_num = rs.getBigDecimal("my_num"),
                 my_array = rs.getTypedArray("my_array"),
-                my_json_array = rs.getTypedArray("my_json_array"),
-                my_json_obj = rs.getString("my_json_obj"),
+                my_json_array = rs.getJsonObject("my_json_array",objectMapper,Array<String>::class.java),
+                my_json_obj = rs.getJsonObject("my_json_obj",objectMapper,object: TypeReference<Map<String,String>>(){}),
                 my_interval = rs.getDuration("my_interval"),
                 group = rs.getString("group")
         )
