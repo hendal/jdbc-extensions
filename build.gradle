@@ -52,6 +52,15 @@ dependencies {
     testRuntime group: 'org.postgresql', name: 'postgresql', version: '42.0.0'
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives sourcesJar
+//    archives javadocJar
+}
+
 task runTestDb(type: Exec) {
     workingDir "./src/main/docker"
     commandLine "docker-compose", "-f", "docker-compose-test.yml", "up", "-d","--remove-orphans"
