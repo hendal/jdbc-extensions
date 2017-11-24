@@ -4,23 +4,27 @@ import com.hendal.spring.jdbcextensions.jdbc.IEntity
 import com.hendal.spring.jdbcextensions.jdbc.IReadOnlyRepository
 import com.hendal.spring.jdbcextensions.jdbc.dto.Page
 import com.hendal.spring.jdbcextensions.jdbc.types.BaseType
+import com.hendal.spring.jdbcextensions.jdbc.types.FunctionType
+import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.io.Serializable
 
 abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IReadOnlyRepository<T, ID> {
+    val logger = LoggerFactory.getLogger(javaClass)!!
     abstract fun getJdbcTemplate(): NamedParameterJdbcTemplate
     abstract fun getters(): Map<String, BaseType<T>>
-    fun getter(name: String): BaseType<T> = getters()[name]!!
+    fun getter(name: String): BaseType<T> = getters()[name] ?: throw RuntimeException("unknown column $name")
     override fun findOne(
             id: ID,
             cols: Array<String>,
             rm: RowMapper<T>
     ): T {
         val params = mapOf(id() to id)
+        val c = cols.map(this::getter)
 
         return getJdbcTemplate().queryForObject(forgeSelect(
-                cols = cols,
+                cols = c,
                 page = -1,
                 simpleWhere = params,
                 size = -1,
@@ -35,8 +39,9 @@ abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IR
             rm: RowMapper<T>
     ): List<T> {
         val parsedParams = ParamInterpreter.interpretParams(simpleWhere)
+        val c = cols.map(this::getter)
         return getJdbcTemplate().query(forgeSelect(
-                cols = cols,
+                cols = c,
                 page = -1,
                 simpleWhere = parsedParams,
                 size = -1,
@@ -54,15 +59,16 @@ abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IR
     ): Page<T> {
         val parsedParams = ParamInterpreter.interpretParams(simpleWhere)
         val total = getJdbcTemplate().queryForObject(forgeSelect(
-                cols = arrayOf("count(1)"),
+                cols = listOf(FunctionType<T>("count(1)")),
                 page = -1,
                 simpleWhere = parsedParams,
                 size = -1,
                 sortColumns = arrayOf()
         ), parsedParams, Long::class.java)!!
-        val items = if (total != 0L && total > size * page) {
+        val c = cols.map(this::getter)
+        val items = if (total != 0L && total < size * page) {
             getJdbcTemplate().query(forgeSelect(
-                    cols = cols,
+                    cols = c,
                     page = page,
                     simpleWhere = parsedParams,
                     size = size,
@@ -81,15 +87,17 @@ abstract class ReadOnlyJdbcRepository<T : IEntity<T,ID>, ID : Serializable> : IR
                 items = items)
     }
 
-    private fun forgeSelect(cols: Array<String>, simpleWhere: Map<String, *>, page: Int, size: Int, sortColumns: Array<String>): String {
-        val selectColumns = cols.map(this::getter).map { it.columnName() } .toTypedArray()
+    private fun forgeSelect(cols: List<BaseType<*>>, simpleWhere: Map<String, *>, page: Int, size: Int, sortColumns: Array<String>): String {
+        val selectColumns = cols.map { it.columnName() } .toTypedArray()
         val columns = java.lang.String.join(",", *selectColumns)!!
         val sColumns = sortColumns.map(this::getter).map { it.columnName() } .toTypedArray()
         val sortC = java.lang.String.join(",", *sColumns)!!
         val sort = if (sortC.isEmpty()) "" else "ORDER BY $sortC"
         val where = simpleWhereInterpret(simpleWhere)
-        val paging = (if (size != -1) " LIMIT $size " else "") + (if (page != -1) "OFFSET ${page * size}" else "")
-        return "SELECT $columns FROM ${tableName()} $where $sort $paging"
+        val paging = (if (size != -1) " LIMIT $size " else "") + (if (page != -1) "OFFSET ${(page-1) * size}" else "")
+        val select = "SELECT $columns FROM ${tableName()} $where $sort $paging"
+        println(select)
+        return select
     }
 
     private fun simpleWhereInterpret(where: Map<String, *>): String {

@@ -1,7 +1,5 @@
 package com.hendal.spring.jdbcextensions.jdbc.types
 
-import com.hendal.spring.jdbcextensions.jdbc.IEntity
-import java.io.Serializable
 import kotlin.reflect.KProperty1
 
 class IntType<E>(

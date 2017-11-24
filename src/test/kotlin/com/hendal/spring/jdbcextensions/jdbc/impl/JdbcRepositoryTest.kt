@@ -42,7 +42,7 @@ class JdbcRepositoryTest {
     }
 
     @Test
-    fun findAllTest() {
+    fun findOneTest() {
         val  entity= repo.findOne(1)
         val correctedModel = entity1.copy(id = 1)
         val correctedEntity = entity.copy(
@@ -50,5 +50,16 @@ class JdbcRepositoryTest {
                 my_num = entity.my_num.setScale(2)
         )
         Assert.assertEquals(correctedModel, correctedEntity)
+    }
+    @Test
+    fun findAllTest() {
+        val  entity= repo.findAll()
+        org.springframework.util.Assert.notEmpty(entity,"FindAll must return a value")
+    }
+
+    @Test
+    fun findPagedTest() {
+        val  pages= repo.findAllPaginated(page = 1,size = 2)
+        org.springframework.util.Assert.notEmpty(pages.items,"FindAll must return a value")
     }
 }

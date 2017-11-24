@@ -43,6 +43,7 @@ dependencies {
     compile("org.springframework:spring-core:$springVersion")
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.2'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.2'
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.0.1.RELEASE'
