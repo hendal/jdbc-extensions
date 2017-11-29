@@ -20,7 +20,7 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 
 group = 'com.hendal.spring'
-version = '0.0.4'
+version = '0.0.5'
 
 sourceCompatibility = 1.8
 compileKotlin {
